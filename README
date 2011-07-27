@@ -1,0 +1,7 @@
+Hbase bindings for OCaml
+
+Depends on thrift (git://git.apache.org/thrift.git) compiler and library. Tested with revision 9623fc5476b8c7225b7d9f543d631e5240891f99.
+
+'make generate' will download version 0.90.3 of Hbase and generate the ocaml bindings from the thrift specification.
+'make' will build the bindings.
+'make install' will install the bindings with ocamlfind.
