@@ -18,7 +18,7 @@
 #
 
 SOURCES = Hbase_types.ml Hbase_types.mli Hbase_consts.ml Hbase.ml Hbase.mli
-LIBINSTALL_FILES = hbase.cma hbase.cmxa $(addsuffix .cmi, $(basename $(filter %.mli, $(SOURCES))))
+LIBINSTALL_FILES = hbase.a hbase.cma hbase.cmxa $(addsuffix .cmi, $(basename $(filter %.mli, $(SOURCES))))
 RESULT = hbase
 LIBS = unix threads
 PACKS = thrift
