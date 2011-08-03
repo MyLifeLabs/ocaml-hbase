@@ -18,7 +18,7 @@
 #
 
 SOURCES = supjson.ml netclient_easy.ml additions_to_option.ml hbase.ml
-LIBINSTALL_FILES = hbase.a hbase.cma hbase.cmxa $(addsuffix .cmi, $(basename $(filter %.mli, $(SOURCES))))
+LIBINSTALL_FILES = hbase.a hbase.cma hbase.cmxa $(addsuffix .cmi, $(basename $(SOURCES)))
 RESULT = hbase
 # LIBS = unix threads
 PACKS = netclient extlib yojson
