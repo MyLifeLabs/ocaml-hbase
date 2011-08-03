@@ -17,15 +17,13 @@
 # under the License.
 #
 
-all:
-	cd gen-ocaml; make; cd ..
-clean:
-	cd gen-ocaml; make clean; cd ..
-install:
-	cd gen-ocaml; make install; cd ..
-uninstall:
-	cd gen-ocaml; make uninstall; cd ..
-generate:
-	wget -O - http://apache.ziply.com//hbase/stable/hbase-0.90.3.tar.gz | tar xzf - && thrift -gen ocaml hbase-0.90.3/src/main/resources/org/apache/hadoop/hbase/thrift/Hbase.thrift
-generate-clean:
-	rm -rf hbase-0.90.3
+SOURCES = supjson.ml netclient_easy.ml additions_to_option.ml hbase.ml
+LIBINSTALL_FILES = hbase.a hbase.cma hbase.cmxa $(addsuffix .cmi, $(basename $(filter %.mli, $(SOURCES))))
+RESULT = hbase
+# LIBS = unix threads
+PACKS = netclient extlib yojson
+all: native-code-library debug-code-library top
+install: libinstall
+uninstall: libuninstall
+OCAMLMAKEFILE = OCamlMakefile
+include $(OCAMLMAKEFILE)

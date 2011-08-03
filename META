@@ -1,5 +1,5 @@
 name = "hbase"
 description = "Hbase bindings for ocaml"
-requires = "unix,threads,thrift"
+requires = "netclient,extlib,yojson"
 archive(byte) = "hbase.cma"
 archive(native) = "hbase.cmxa"

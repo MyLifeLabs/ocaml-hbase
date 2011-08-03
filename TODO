@@ -1,0 +1,2 @@
+* Connection caching
+* PUT/POST (writes for HBase)
