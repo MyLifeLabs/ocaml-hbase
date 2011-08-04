@@ -2,6 +2,7 @@ module Y = Yojson
 module S = Supjson
 module N = Netclient_easy
 module A2O = Additions_to_option
+module A2L = ExtList.List
 module B64 = Netencoding.Base64
 
 type hbase_environment = {
@@ -11,6 +12,8 @@ type hbase_environment = {
 }
 
 let (>>=) : 'a option -> ('a -> 'b  option) -> 'b option = A2O.bind
+
+let accept_json_header : (string * string) list = [("Accept", "application/json")]
 
 let get_cell : Y.Basic.json -> (int * string * string) option = function
   | `Assoc [("Row",`List [`Assoc record])] ->
@@ -33,8 +36,20 @@ let get_cell : Y.Basic.json -> (int * string * string) option = function
  * cell *)
 let get (environment : hbase_environment) (row : string) : (int * string * string) option =
   let uri = "http://" ^ environment.host ^ ":" ^ (string_of_int environment.port) ^ "/" ^ environment.table ^ "/" ^ row ^ "?v=1" in
-  (N.http_get_with_header uri [("Accept", "application/json")]) >>= (fun response ->
+  (N.http_get_with_header uri accept_json_header) >>= (fun response ->
   get_cell (Y.Basic.from_string response))
+
+let get_rows (environment : hbase_environment) (rows : string list) : (int * string * string) option list =
+  let uris = A2L.combine
+               (A2L.map (fun row -> "http://" ^ environment.host ^ ":" ^ (string_of_int environment.port) ^ "/" ^ environment.table ^ "/" ^ row ^ "?v=1") rows)
+               (A2L.make (List.length rows) accept_json_header) in
+  A2L.map
+    (fun oresponse ->
+       oresponse >>= (fun response -> get_cell (Y.Basic.from_string response)))
+    (N.http_gets_with_headers uris)
+
+let get_rows_simple (environment : hbase_environment) (rows : string list) : (int * string * string) list =
+  A2O.cat_somes (get_rows environment rows)
 
 let connect (host : string) (port : int) (table : string) : hbase_environment =
   { host = host
