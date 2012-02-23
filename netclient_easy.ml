@@ -1,4 +1,4 @@
-module A2L = ExtList.List
+module A2L = BatList
 module HHard = Http_client
 
 type header = (string * string) list
@@ -6,7 +6,7 @@ type header = (string * string) list
 type uri = string
 
 let update_header http_header (header : (string * string) list) : unit =
-  A2L.iter (fun (key, value) -> http_header # update_field key value) header
+  List.iter (fun (key, value) -> http_header # update_field key value) header
 
 let http_result http_call : string option =
   match http_call # status with
@@ -32,6 +32,6 @@ let http_gets_with_headers (uris_headers : (uri * header) list) : string option 
   let http_calls = A2L.map (fun (uri, _) -> new HHard.get uri) uris_headers in
   let http_headers = A2L.map (fun http_call -> http_call # request_header `Base) http_calls in
   A2L.iter2 update_header http_headers (A2L.map snd uris_headers);
-  A2L.iter (fun http_call -> pipeline # add http_call) http_calls;
+  List.iter (fun http_call -> pipeline # add http_call) http_calls;
   pipeline # run ();
   A2L.map (fun http_call -> http_result http_call) http_calls

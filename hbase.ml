@@ -2,7 +2,7 @@ module Y = Yojson
 module S = Supjson
 module N = Netclient_easy
 module A2O = Additions_to_option
-module A2L = ExtList.List
+module A2L = BatList
 module B64 = Netencoding.Base64
 
 type hbase_environment = {
